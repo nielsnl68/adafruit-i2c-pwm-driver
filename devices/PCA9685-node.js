@@ -26,9 +26,9 @@ module.exports = function (RED) {
   
   function init (config) {
     if (pwmDriver == undefined) {
-      pwmDriver = new PCA9685(config.address, false);
-      pwmDriver.init();
-      pwmDriver.setPWMFreq(config.pwmfreq)
+      pwmDriver = new PCA9685(1,config.address, false);
+      pwmDriver.init()
+      .then( function () {pwmDriver.setPWMFreq(config.pwmfreq);} )
       .catch(console.error);
     }
     return pwmDriver;  
@@ -56,11 +56,11 @@ module.exports = function (RED) {
       
       off = number(msg.payload);
       
-      pwmDriver.setPWM(channel, 0, off);// channel, on , off
+      pwmDriver.setPWM(channel, 0, off)// channel, on , off
   
       
       
-    });
+    }
   }
 
   RED.nodes.registerType("pca9685", pca9685out);
