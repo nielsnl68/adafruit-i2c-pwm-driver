@@ -63,6 +63,6 @@ module.exports = function (RED) {
     });
   }
 
-  RED.nodes.registerType("pca9685", pca9685out);
+  RED.nodes.registerType("PCA9685", pca9685out);
 
 }
