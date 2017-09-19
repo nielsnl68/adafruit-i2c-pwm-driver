@@ -1,4 +1,4 @@
-# Adafruit I2C PWM Driver 
+# A set of i2c device nodes
 
 Node-red implementation for different i2c-device like the Adafruit 16-Channel 12-bit PWM/Servo Driver
 http://www.adafruit.com/products/815
