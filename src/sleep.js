@@ -1,19 +1,28 @@
-const NanoTimer = require('nanotimer')
+'use strict';
 
-export function sleep (seconds) {
-  return new Promise(
-    function (resolve, reject) {
-      const timer = new NanoTimer()
-      timer.setTimeout(x => resolve(seconds), '', `${seconds}s`)
-      timer.clearInterval()
-    })
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.sleep = sleep;
+exports.usleep = usleep;
+var NanoTimer = require('nanotimer');
+
+function sleep(seconds) {
+  return new Promise(function (resolve, reject) {
+    var timer = new NanoTimer();
+    timer.setTimeout(function (x) {
+      return resolve(seconds);
+    }, '', seconds + 's');
+    timer.clearInterval();
+  });
 }
 
-export function usleep (micros) {
-  return new Promise(
-    function (resolve, reject) {
-      const timer = new NanoTimer()
-      timer.setTimeout(x => resolve(micros), '', `${micros}u`)
-      timer.clearInterval()
-    })
+function usleep(micros) {
+  return new Promise(function (resolve, reject) {
+    var timer = new NanoTimer();
+    timer.setTimeout(function (x) {
+      return resolve(micros);
+    }, '', micros + 'u');
+    timer.clearInterval();
+  });
 }

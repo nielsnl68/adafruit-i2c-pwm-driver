@@ -20,7 +20,7 @@ module.exports = function (RED) {
   // Node.js Imports
 
   // NPM Imports
-  const i2c = require('./PCA9685.js');
+  const i2c = require("./PCA9685.js");
   
   let pwmDriver = undefined;
   

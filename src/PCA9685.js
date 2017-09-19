@@ -1,8 +1,8 @@
 'use strict';
 
-var _sleep = require('./sleep');
+var _sleep = require("./sleep");
 
-var I2C = require('./i2cWrapper');
+var I2C = require("./i2cWrapper");
 
 
 // ============================================================================
