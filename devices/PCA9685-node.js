@@ -28,7 +28,7 @@ module.exports = function (RED) {
     if (pwmDriver == undefined) {
       pwmDriver = new PCA9685(1,config.address, false);
       pwmDriver.init()
-      .then(() => pwmDriver.setPWMFreq(config.pwmfreq))
+      .then( function () {pwmDriver.setPWMFreq(config.pwmfreq);} )
       .catch(console.error);
     }
     return pwmDriver;  
@@ -43,7 +43,7 @@ module.exports = function (RED) {
     // 1. Process Config
     node.debugMode = (config && config.debugMode);
     
-    this.init(config);
+    pwmDriver = this.init(config);
     
     node.on("input", function(msg) {
       var address = node.address; 
@@ -57,7 +57,7 @@ module.exports = function (RED) {
       off = number(msg.payload);
       
       pwmDriver.setPWM(channel, 0, off)// channel, on , off
-       .catch(node.error);
+  
       
       
     }
