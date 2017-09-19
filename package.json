@@ -1,12 +1,16 @@
 {
   "name": "node-red-contrib-i2c-pwm-driver",
   "version": "0.0.5",
-  "description": "node-red /i2c control for the Adafruit PWM servo driver",
-  "main": "dist/i2cpwmnode.js",
+  "description": "Set of node-red /i2c devices",
+  "node-red": {
+    "nodes": {
+      "PCA9685": "devices/PCA9685-node.js"
+    }
+  },
   "author": "Mark Moissette / niels v/d Spek",
   "license": "MIT",
   "keywords": [
-    "node-red",
+    "n_de-red",
     "raspberry",
     "pi",
     "adafruit",
@@ -16,10 +20,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/nielsnl68/node-red-contrib-i2c-pwm-driver"
+    "url": "https://github.com/nielsnl68/node-red-contrib-i2c-devices"
   },
   "bugs": {
-    "url": "https://github.com/nielsnl68/node-red-contrib-i2c-pwm-driver/issues"
+    "url": "https://github.com/nielsnl68/node-red-contrib-i2c-devices/issues"
   },
   "scripts": {
     "build": "babel src --out-dir dist",
