@@ -8,55 +8,35 @@ http://www.adafruit.com/products/815
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [API](#api)
 - [Contribute](#contribute)
 - [License](#license)
 
 ## Installation
 
 ```
-npm i adafruit-i2c-pwm-driver
+npm i node-red-contrib-i2c-pwm-driver
 ```
 
 
 ## Usage
 
-```js
-const makePwmDriver = require('adafruit-i2c-pwm-driver')
-const pwmDriver = makePwmDriver({address: 0x40, device: '/dev/i2c-1'})
+* Add the node on your worksheet, 
+* set the default i2c address (optionaly you can set it using the `msg.address`).
+* set the PWMfrequency in hertz (default this is set to 60 Hertz)
+* set optionally the channel to change (or use `msg.channel`).
 
-pwmDriver.setPWMFreq(50)
-pwmDriver.setPWM(2) // channel, on , off
-
-```
-
-To configure I2c on your Raspberry-pi / Beaglebone please see [here](https://npmjs.org/package/i2c)
-
-you can find a simple example [here](https://raw.githubusercontent.com/kaosat-dev/adafruit-i2c-pwm-driver/master/examples/simple.js)
+To configure I2c on your Raspberry-pi / Beaglebone please see [here](https://npmjs.org/package/i2c-bus)
 
 
-## API
+### Input msg
 
+* [Opt.] i2c address as `msg.address`
+* [Opt.] pwm channel as `msg.channel`
+* `msg.payload` is the value that is send to the pwm-device (value between 0 to 4048).
 
-`makePwmDriver({address:Number,device:String,debug:Bool})`
+### Output msg
 
-Setting up a new PwmDriver
-
-- address: Address of the i2c panel, e.g. 0x20
-- device: Device name, e.g. '/dev/i2c-1' (defaults to /dev/i2c-1)
-- debug: flag used to display debug messages
-
-`pwmDriver.setPWMFreq(frequency:Number)`
-
-Set the PWM frequency to the provided value (in hertz).
-
-`pwmDriver.setPWM(channel:Number, on:Number, off:Number)`
-
-Sets a single PWM channel.
-
-`pwmDriver.setALLPWM(channel:Number, on:Number, off:Number)`
-
-Sets all PWM channels.
+This node can be daisychained the message is the same as the input msg.
 
 
 ## Contribute
