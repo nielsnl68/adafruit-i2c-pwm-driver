@@ -1,11 +1,12 @@
 {
-  "name": "adafruit-i2c-pwm-driver",
-  "version": "0.2.1",
-  "description": "node.js /i2c control for the Adafruit PWM servo driver",
-  "main": "dist/index.js",
-  "author": "Mark Moissette",
+  "name": "node-red-contrib-i2c-pwm-driver",
+  "version": "0.0.5",
+  "description": "node-red /i2c control for the Adafruit PWM servo driver",
+  "main": "dist/i2cpwmnode.js",
+  "author": "Mark Moissette / niels v/d Spek",
   "license": "MIT",
   "keywords": [
+    "node-red",
     "raspberry",
     "pi",
     "adafruit",
@@ -15,10 +16,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/kaosat-dev/adafruit-i2c-pwm-driver"
+    "url": "https://github.com/nielsnl68/node-red-contrib-i2c-pwm-driver"
   },
   "bugs": {
-    "url": "https://github.com/kaosat-dev/adafruit-i2c-pwm-driver/issues"
+    "url": "https://github.com/nielsnl68/node-red-contrib-i2c-pwm-driver/issues"
   },
   "scripts": {
     "build": "babel src --out-dir dist",
@@ -28,7 +29,7 @@
     "release-major": "git checkout master && npm run build; git commit -a -m 'chore(dist): built release/'; npm version major && git push origin master --tags "
   },
   "dependencies": {
-    "i2c": "0.2.3",
+    "i2c-bus": "1.2.2",
     "nanotimer": "^0.3.14"
   },
   "devDependencies": {
