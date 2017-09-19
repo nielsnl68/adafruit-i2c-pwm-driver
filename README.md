@@ -1,9 +1,6 @@
-# Adafruit I2C PWM Driver
+# Adafruit I2C PWM Driver 
 
-[![npm version](https://badge.fury.io/js/adafruit-i2c-pwm-driver.svg)](https://badge.fury.io/js/adafruit-i2c-pwm-driver)
-
-
-Node.js implementation for the Adafruit 16-Channel 12-bit PWM/Servo Driver
+Node-red implementation for different i2c-device like the Adafruit 16-Channel 12-bit PWM/Servo Driver
 http://www.adafruit.com/products/815
 
 - [Installation](#installation)
@@ -14,11 +11,11 @@ http://www.adafruit.com/products/815
 ## Installation
 
 ```
-npm i node-red-contrib-i2c-pwm-driver
+npm i node-red-contrib-i2c-devices
 ```
 
 
-## Usage
+## Usage of Adafruit I2C PWM Driver node 
 
 * Add the node on your worksheet, 
 * set the default i2c address (optionaly you can set it using the `msg.address`).
