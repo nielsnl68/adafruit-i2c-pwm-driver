@@ -4,9 +4,9 @@ import { sleep, usleep } from './sleep'
 // ============================================================================
 // Adafruit PCA9685 16-Channel PWM Servo Driver
 // ============================================================================
-module.exports = makePwmDriver
+module.exports = PCA9685
 
-function makePwmDriver (options) {
+function PCA9685 (port, address, debug) {
   // Registers/etc.
   const MODE1 = 0x00
   const MODE2 = 0x01
@@ -30,13 +30,7 @@ function makePwmDriver (options) {
   const INVRT = 0x10
   const OUTDRV = 0x04
 
-  const defaults = {
-    address: 0x40,
-    device: '/dev/i2c-1',
-    debug: false
-  }
-  const {address, device, debug} = Object.assign({}, defaults, options)
-  const i2c = I2C(address, {device, debug})
+  const i2c = I2C(1, address, debug)
   let prescale
 
   const init = () => {
@@ -64,19 +58,18 @@ function makePwmDriver (options) {
 
     // i2c.writeBytes(MODE1, 0x00)
     // in the future use await i2c.writeBytes(MODE1, ALLCALL)
-    setAllPWM(0, 0)
-    i2c.writeBytes(MODE2, OUTDRV)
-    i2c.writeBytes(MODE1, ALLCALL)
-    usleep(5000)
-      .then(x => i2c.readBytes(MODE1, 1)
-        .then((mode1) => {
-          mode1 = mode1 & ~SLEEP // wake up (reset sleep)
-          return i2c.writeBytes(MODE1, mode1)
-        })
-        .then(usleep(5000)) // wait for oscillator)
-        .then(x => debug ? console.log('init done ') : '')
-        .catch(e => console.error('error in init', e))
-    )
+
+    return setAllPWM(0, 0)
+      .then(() => i2c.writeBytes(MODE2, OUTDRV))
+      .then(() => i2c.writeBytes(MODE1, ALLCALL))
+      .then(() => usleep(5000))
+      .then(() => i2c.readBytes(MODE1, 1))
+      .then((mode1) => {
+        mode1 = mode1 & ~SLEEP // wake up (reset sleep)
+        return i2c.writeBytes(MODE1, mode1)
+      })
+      .then(() => usleep(5000)) // wait for oscillator)
+      .then(() => debug ? console.log('init done ') : '')
   }
 
   const setPWMFreq = freq => {
@@ -95,19 +88,21 @@ function makePwmDriver (options) {
       console.log(`Final pre-scale: ${prescale}`)
     }
 
+    let oldmode;
+    let newmode;
     return i2c.readBytes(MODE1, 1)
       .then(function (data) {
-        const oldmode = data[0]
-        let newmode = (oldmode & 0x7F) | 0x10 // sleep
+        oldmode = data[0]
+        newmode = (oldmode & 0x7F) | 0x10 // sleep
         if (debug) {
           console.log(`prescale ${Math.floor(prescale)}, newMode: newmode.toString(16)`)
         }
-        i2c.writeBytes(MODE1, newmode) // go to sleep
-        i2c.writeBytes(PRESCALE, Math.floor(prescale))
-        i2c.writeBytes(MODE1, oldmode)
-        usleep(5000)
-          .then(x => i2c.writeBytes(MODE1, oldmode | 0x80))
+        return i2c.writeBytes(MODE1, newmode) // go to sleep
       })
+      .then(() => i2c.writeBytes(PRESCALE, Math.floor(prescale)))
+      .then(() => i2c.writeBytes(MODE1, oldmode))
+      .then(() => usleep(5000))
+      .then(() => i2c.writeBytes(MODE1, oldmode | 0x80));
   }
 
   // Sets a single PWM channel
@@ -119,10 +114,10 @@ function makePwmDriver (options) {
     await i2c.writeBytes(LED0_ON_H + 4 * channel, on >> 8)
     await i2c.writeBytes(LED0_OFF_L + 4 * channel, off & 0xFF)
     await i2c.writeBytes(LED0_OFF_H + 4 * channel, off >> 8)*/
-    i2c.writeBytes(LED0_ON_L + 4 * channel, on & 0xFF)
-    i2c.writeBytes(LED0_ON_H + 4 * channel, on >> 8)
-    i2c.writeBytes(LED0_OFF_L + 4 * channel, off & 0xFF)
-    i2c.writeBytes(LED0_OFF_H + 4 * channel, off >> 8)
+    return i2c.writeBytes(LED0_ON_L + 4 * channel, on & 0xFF)
+      .then(() => i2c.writeBytes(LED0_ON_H + 4 * channel, on >> 8))
+      .then(() => i2c.writeBytes(LED0_OFF_L + 4 * channel, off & 0xFF))
+      .then(() => i2c.writeBytes(LED0_OFF_H + 4 * channel, off >> 8))
   }
 
   const setAllPWM = (on, off) => {
@@ -130,20 +125,19 @@ function makePwmDriver (options) {
     await i2c.writeBytes(ALL_LED_ON_H, on >> 8)
     await i2c.writeBytes(ALL_LED_OFF_L, off & 0xFF)
     await i2c.writeBytes(ALL_LED_OFF_H, off >> 8)*/
-    i2c.writeBytes(ALL_LED_ON_L, on & 0xFF)
-    i2c.writeBytes(ALL_LED_ON_H, on >> 8)
-    i2c.writeBytes(ALL_LED_OFF_L, off & 0xFF)
-    i2c.writeBytes(ALL_LED_OFF_H, off >> 8)
+    return i2c.writeBytes(ALL_LED_ON_L, on & 0xFF)
+      .then(() => i2c.writeBytes(ALL_LED_ON_H, on >> 8))
+      .then(() => i2c.writeBytes(ALL_LED_OFF_L, off & 0xFF))
+      .then(() => i2c.writeBytes(ALL_LED_OFF_H, off >> 8))
   }
 
   const stop = () => i2c.writeBytes(ALL_LED_OFF_H, 0x01)
 
-  // actual init
-  init()
-
   return {
+    init,
     setPWM,
     setAllPWM,
     setPWMFreq,
-  stop}
+    stop
+  }
 }

@@ -1,0 +1,55 @@
+66<script type="text/javascript">
+  RED.nodes.registerType('PCA9685', {
+    category: 'i2c sensors',
+    defaults: {
+      address: {value: 0x40, required: true, validate:RED.validators.number() },
+      pwmfreq: {value: '50', required: true, validate:RED.validators.number() },
+      channel: {value: '0',  required: true, validate:RED.validators.number() }
+    },
+    color: '#75aaff',
+    inputs: 1,
+    outputs: 2,
+    icon: 'chip.png',
+    label: function () {
+      return `PCA9685 @ 0x${Number(this.address).toString(16)}`;
+    },
+    labelStyle: function () {
+      return 'node_label_italic';
+    },
+    oneditsave: function() {
+      this.address = Number(this.address);
+    }
+  });
+</script>
+
+<script type="text/x-red" data-template-name="PCA9685">
+    <div class="form-row">
+        <span><i class="fa fa-microchip" aria-hidden="true"></i> TSL2561 Light-to-Digital Converter<br/> Sensor I2C Configuration</span>
+    </div>
+    <div class="form-row">
+        <label for="node-input-address"><i class="fa fa-address-card-o" aria-hidden="true"></i> Bus Address</label>
+         <select id="node-input-address">
+            <option value="41">0x40</option>
+            
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-pwmfreq"><i class="fa fa-empire"></i> PWM Frequence</label>
+        <input type="number" id="node-input-pwmfreq" class="I2C-in-pwmfreq" placeholder="60" min=0 max=255>
+    </div>
+    <div class="form-row">
+        <label for="node-input-channel"><i class="fa fa-empire"></i> Channel</label>
+        <input type="number" id="node-input-channel" class="I2C-in-channel" placeholder="[msg.channel]" min=0 max=15>
+    </div>
+ 
+    <div class="form-row">
+        <label for="node-input-debugMode"><i class="fa fa-tag"></i> Debug Mode</label>
+        <input type="checkbox" id="node-input-debugMode" placeholder="Debug Mode">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="PCA9685">
+   <p>Node for working with <a href="https://www.adafruit.com/product/815">Adafruit 16-Channel 12-bit PWM/Servo Driver</a> over i2c bus on Raspberry Pi.</p>
+
+   <a href="https://www.nxp.com/docs/en/data-sheet/PCA9685.pdf">PCA9685 Datasheet Download</a>
+</script>

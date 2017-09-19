@@ -1,15 +1,18 @@
-const I2C = require('i2c')
+const I2C = require('i2c-bus')
 
 /*
   this wrappers wraps the i2c readBytes, writeBytes functions and returns promises
 */
-function makeI2CWrapper (address, {device, debug}) {
-  const i2c = new I2C(address, {device})
-
+function I2CWrapper (port, address, debug) {
+  const i2c = I2C.openSync(port);
+  const address = address;
+  const debug = debug;
+    
   const readBytes = (cmd, length) => {
+	let buf = Buffer.alloc(length)
     return new Promise(
       function (resolve, reject) {
-        i2c.readBytes(cmd, length, function (error, data) {
+        i2c.i2cRead(this.address, cmd, length, buf, function (error, data) {
           if (error) {
             return reject(error)
           }
@@ -23,16 +26,16 @@ function makeI2CWrapper (address, {device, debug}) {
     if (!(buf instanceof Array)) {
       buf = [buf]
     }
+	buf = new Buffer(buf);
     if(debug){
       console.log(`cmd ${cmd.toString(16)} values ${buf}`)
     }
     return new Promise(
       function (resolve, reject) {
-        i2c.writeBytes(cmd, buf, function (error, data) {
+        i2c.i2cWrite(this.address, cmd, buf.length, buf, function (error, data) {
           if (error) {
             return reject(error)
           }
-
           resolve(data)
         })
       }
@@ -45,4 +48,4 @@ function makeI2CWrapper (address, {device, debug}) {
   }
 }
 
-module.exports = makeI2CWrapper
+module.exports = I2CWrapper
