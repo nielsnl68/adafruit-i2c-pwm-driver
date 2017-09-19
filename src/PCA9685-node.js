@@ -18,9 +18,9 @@ module.exports = function (RED) {
   'use strict';
   // require any external libraries we may need....
   // Node.js Imports
-  const os = require('os');
+
   // NPM Imports
-  const i2c = require('../src/PCA9685.js');
+  const i2c = require('./PCA9685.js');
   
   let pwmDriver = undefined;
   

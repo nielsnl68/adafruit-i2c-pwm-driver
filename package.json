@@ -4,7 +4,7 @@
   "description": "Set of node-red /i2c devices",
   "node-red": {
     "nodes": {
-      "PCA9685": "devices/PCA9685-node.js"
+      "PCA9685": "src/PCA9685-node.js"
     }
   },
   "author": "niels v/d Spek",
