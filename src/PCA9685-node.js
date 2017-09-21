@@ -20,15 +20,15 @@ module.exports = function (RED) {
   // Node.js Imports
 
   // NPM Imports
-  const i2c = require("./PCA9685.js");
+  const PCA9685 = require("./PCA9685.js");
   
   let pwmDriver = undefined;
   
   function init (config) {
     if (pwmDriver == undefined) {
-      pwmDriver = new PCA9685(config.address, false);
-      pwmDriver.init();
-      pwmDriver.setPWMFreq(config.pwmfreq)
+      pwmDriver = new PCA9685(1, config.address, false);
+      pwmDriver.init()
+      .then( () => pwmDriver.setPWMFreq(config.pwmfreq) )
       .catch(console.error);
     }
     return pwmDriver;  
@@ -38,27 +38,45 @@ module.exports = function (RED) {
   function pca9685out(config) {
 
     RED.nodes.createNode(this, config);
-    let node = this;
-
-    // 1. Process Config
-    node.debugMode = (config && config.debugMode);
+    var node = this;
     
-    pwmDriver = this.init(config);
+    node.channel = config.channel;
+    node.rules   = config.rules;
+    if ( typeof node.rules   === 'undefined'){
+       node.rules = [];
+    }
+    node.minout  =    0;
+    node.maxout  = 4048;
+
+    pwmDriver = init(config);
     
     node.on("input", function(msg) {
-      var address = node.address; 
-      if (isNaN(address)) address = msg.address;
-      var channel = node.channel;
-      if (isNaN(channel)) channel = msg.channel;
+      var channel;
+      if (msg.hasOwnProperty("channel")) { 
+        channel = msg.channel; 
+      } else {
+        channel = node.channel ;
+      }
 
-      address = parseInt(address);
-      channel = parseInt(channel);
-      
-      off = number(msg.payload);
-      
-      pwmDriver.setPWM(channel, 0, off);// channel, on , off
-  
-      
+      channel = Number(channel);
+
+      var n = Number(msg.payload);
+      if (n <   0) { n = 0; }
+      if (n > 255) { n = 255; }
+                    
+//                    if (node.action == "roll") {
+//                        var divisor = node.maxin - node.minin;
+//                        n = ((n - node.minin) % divisor + divisor) % divisor + node.minin;
+//                    }
+      var rule = node.rules[channel];
+      if (typeof node.rules[channel] === 'undefined'){
+         rule = {smooth:false, minout:0, maxout:4048};
+      }          
+
+      var out = (n / 255 * (Number(rule.maxout) - Number(rule.minout))) + Number(rule.minout);
+      out = Math.round(out); 
+      node.log([channel, out, rule.maxout , rule.minout]);
+      pwmDriver.setPWM(channel, 0, out)// channel, on , off
       
     });
   }

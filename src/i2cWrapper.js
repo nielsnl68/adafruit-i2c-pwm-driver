@@ -5,22 +5,30 @@ var I2C = require('i2c-bus');
 /*
   this wrappers wraps the i2c readBytes, writeBytes functions and returns promises
 */
-function makeI2CWrapper(address, _ref) {
-  var device = _ref.device,
-      debug = _ref.debug;
+function makeI2CWrapper(port, address, debug) {
+  var debug   = debug;
+  var address = address
+  
       
-
-  var i2c = new I2C.openSync(1);
-
+  try {
+    var i2c = new I2C.openSync(port);
+  } catch (er) {
+    return console.error(er);
+  }
+ 
   var readBytes = function readBytes(cmd, length) {
     return new Promise(function (resolve, reject) {
       let buf = Buffer.alloc(length);
-      i2c.readBytes(address, cmd, length, buf, function (error, data) {
-        if (error) {
-          return reject(error);
-        }
-        resolve(data);
-      });
+      try {
+        i2c.readI2cBlock(address, cmd, length, buf, function (error, data) {
+          if (error) {
+            return reject(error);
+          }
+          resolve(data);
+        });
+      } catch (er) {
+        return reject(er);
+      }
     });
   };
 
@@ -28,18 +36,24 @@ function makeI2CWrapper(address, _ref) {
     if (!(buf instanceof Array)) {
       buf = [buf];
     }
-    buf = Buffer(buf);
+    if ((buf instanceof Array)) {
+      buf = Buffer(buf);
+    }
     if (debug) {
-      console.log('cmd ' + cmd.toString(16) + ' values ' + buf);
+      console.log('cmd ' + cmd.toString(16) + ' values ' + buf.values());
     }
     return new Promise(function (resolve, reject) {
-      i2c.writeBytes(cmd, buf.length, buf, function (error, data) {
-        if (error) {
-          return reject(error);
-        }
-
-        resolve(data);
-      });
+      try {
+        i2c.writeI2cBlock(address, cmd, buf.length, buf, function (error, data) {
+          if (error) {
+            return reject(error);
+          }
+  
+          resolve(data);
+        });
+      } catch (er) {
+        return reject(error);
+      }
     });
   };
 

@@ -1,36 +1,127 @@
-66<script type="text/javascript">
+<script type="text/javascript">
+
   RED.nodes.registerType('PCA9685', {
     category: 'i2c sensors',
     defaults: {
-      address: {value: 0x40, required: true, validate:RED.validators.number() },
+      address: {value: 64,   required: true, validate:RED.validators.number() },
       pwmfreq: {value: '50', required: true, validate:RED.validators.number() },
-      channel: {value: '0',  required: true, validate:RED.validators.number() }
+      channel: {value: '',   required: false },
+      rules: {value:[{t:"eq", minout: 0, minout:4048}]},
+      name: {name:""}
     },
     color: '#75aaff',
     inputs: 1,
-    outputs: 2,
+    outputs: 1,
     icon: 'chip.png',
     label: function () {
-      return `PCA9685 @ 0x${Number(this.address).toString(16)}`;
+      return this.name || `PCA9685 @ 0x${Number(this.address).toString(16)}`;
     },
     labelStyle: function () {
-      return 'node_label_italic';
+      return this.name?"node_label_italic":"";
     },
     oneditsave: function() {
       this.address = Number(this.address);
+      this.pwmfreq = Number(this.pwmfreq);
+      this.rules = this.rules | []; 
+
+      var rules = $("#node-input-rule-container").editableList('items');
+      var ruleset;
+      var node = this;
+      node.rules = [];
+      rules.each(function(i) {
+          var ruleData = $(this).data('data');
+          var rule = $(this);
+          var r = {smooth:false, minout:0, maxout:4048};
+          r.minout = rule.find(".node-input-rule-minout").val();
+          r.maxout = rule.find(".node-input-rule-maxout").val();
+          r.smooth = rule.find(".node-input-rule-smooth").prop("checked");
+          node.rules.push(r);
+      });  
+    },
+        oneditresize: function(size) {
+            var rows = $("#dialog-form>div:not(.node-input-rule-container-row)");
+            var height = size.height;
+            for (var i=0;i<rows.size();i++) {
+                height -= $(rows[i]).outerHeight(true);
+            }
+            var editorRow = $("#dialog-form>div.node-input-rule-container-row");
+            height -= (parseInt(editorRow.css("marginTop"))+parseInt(editorRow.css("marginBottom")));
+            $("#node-input-rule-container").editableList('height',height);
+        },
+    oneditprepare: function() {
+        var node = this;
+            function resizeRule(rule) {
+                var newWidth = (rule.width()- 60)/ 3;
+                var smoothField  = rule.find(".node-input-rule-smooth");
+                var minoutField = rule.find(".node-input-rule-minout");
+                var maxoutField = rule.find(".node-input-rule-maxout");
+                //smoothField.width(newWidth);
+                minoutField.width(newWidth);
+                maxoutField.width(newWidth);
+            }
+    
+       $("#node-input-rule-container").css('min-height','250px').css('min-width','450px').editableList({
+          addItem: function(container,i,opt) {
+                    if (!opt.hasOwnProperty('r')) {
+                        opt.r = {smooth:false, minout:0, maxout:4048};
+                    }
+                    var rule = opt.r;
+                    if (!opt.hasOwnProperty('i')) {
+                        opt._i = Math.floor((0x99999-0x10000)*Math.random()).toString(16);
+                    }
+                    var row = $('<div/>').appendTo(container);
+                    var finalspan = $('<span/>',{style:"float: left;width:20px; text-align:right; margin-top: 6px;"}).appendTo(row);
+                    finalspan.append(' <span class="node-input-rule-index">'+(i)+'</span> ');
+                    var minOutField = $('<input/>',{class:"node-input-rule-minout",type:"number",style:"margin-left: 5px;"}).appendTo(row);
+                    var maxOutField = $('<input/>',{class:"node-input-rule-maxout",type:"number",style:"margin-left: 5px;"}).appendTo(row);
+                    var smoothField = $('<input/>',{id:"node-input-rule-smooth-"+i,class:"node-input-rule-smooth",type:"checkbox",style:"width:auto; margin-left: 5px;"}).appendTo(row);
+                    $('<label/>',{for:"node-input-rule-case-"+i,style:"margin-left: 3px;"}).text('Smooth').appendTo(row)
+                    minOutField.val(rule.minout);
+                    maxOutField.val(rule.maxout);
+                    if (rule.smooth) {
+                        smoothField.prop('checked',true);
+                    } else {
+                        smoothField.prop('checked',false);
+                    }
+          },
+          removeItem: function(opt) {},
+          resizeItem: resizeRule,
+          sortItems: function(rules) {},
+          sortable: false,
+          removable: false,
+          addButton: false,
+          scrollOnAdd: false
+       }); 
+       node.rules = node.rules;
+       if ( typeof node.rules   === 'undefined'){
+         node.rules = [];
+       }
+       for (var i=0;i<16;i++) {
+          var rule = node.rules[i];
+          if (typeof node.rules[i] === 'undefined'){
+            var rule = {smooth:false, minout:0, maxout:4048};
+          }          
+          $("#node-input-rule-container").editableList('addItem',{r:rule,i:i});
+       }       
     }
   });
 </script>
 
 <script type="text/x-red" data-template-name="PCA9685">
     <div class="form-row">
-        <span><i class="fa fa-microchip" aria-hidden="true"></i> TSL2561 Light-to-Digital Converter<br/> Sensor I2C Configuration</span>
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
     </div>
     <div class="form-row">
         <label for="node-input-address"><i class="fa fa-address-card-o" aria-hidden="true"></i> Bus Address</label>
          <select id="node-input-address">
-            <option value="41">0x40</option>
-            
+            <option value="64">0x40</option>
+            <option value="65">0x41</option>
+            <option value="66">0x42</option>
+            <option value="67">0x43</option>
+            <option value="68">0x44</option>
+            <option value="69">0x45</option>
+            <option value="70">0x46</option>
         </select>
     </div>
     <div class="form-row">
@@ -41,11 +132,10 @@
         <label for="node-input-channel"><i class="fa fa-empire"></i> Channel</label>
         <input type="number" id="node-input-channel" class="I2C-in-channel" placeholder="[msg.channel]" min=0 max=15>
     </div>
- 
-    <div class="form-row">
-        <label for="node-input-debugMode"><i class="fa fa-tag"></i> Debug Mode</label>
-        <input type="checkbox" id="node-input-debugMode" placeholder="Debug Mode">
-    </div>
+    <div class="form-row node-input-rule-container-row">
+        <ol id="node-input-rule-container"></ol>
+    </div>    
+        
 </script>
 
 <script type="text/x-red" data-help-name="PCA9685">

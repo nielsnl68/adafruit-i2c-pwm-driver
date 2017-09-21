@@ -1,14 +1,40 @@
 {
-  "name": "node-red-contrib-i2c-devices",
-  "version": "0.0.7",
-  "description": "Set of node-red /i2c devices",
-  "node-red": {
-    "nodes": {
-      "PCA9685": "src/PCA9685-node.js"
-    }
+  "_from": "git+https://github.com/nielsnl68/node-red-contrib-i2c-devices.git",
+  "_id": "node-red-contrib-i2c-devices@0.0.6",
+  "_inBundle": false,
+  "_integrity": "sha1-DogmAcJ2IhyMM1dN6xa9QhOFvs8=",
+  "_location": "/node-red-contrib-i2c-devices",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "https://github.com/nielsnl68/node-red-contrib-i2c-devices.git",
+    "rawSpec": "https://github.com/nielsnl68/node-red-contrib-i2c-devices.git",
+    "saveSpec": "git+https://github.com/nielsnl68/node-red-contrib-i2c-devices.git",
+    "fetchSpec": "https://github.com/nielsnl68/node-red-contrib-i2c-devices.git",
+    "gitCommittish": "master"
   },
-  "author": "niels v/d Spek",
-  "license": "MIT",
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/nielsnl68/node-red-contrib-i2c-devices.git#e4caa3e3759ce5c2505cd776d370f3ad8a39f615",
+  "_spec": "https://github.com/nielsnl68/node-red-contrib-i2c-devices.git",
+  "_where": "/home/pi/.node-red",
+  "author": {
+    "name": "niels v/d Spek"
+  },
+  "bugs": {
+    "url": "https://github.com/nielsnl68/node-red-contrib-i2c-devices/issues"
+  },
+  "bundleDependencies": false,
+  "dependencies": {
+    "i2c-bus": "1.2.2",
+    "nanotimer": "^0.3.14"
+  },
+  "deprecated": false,
+  "description": "Set of node-red /i2c devices",
+  "devDependencies": {},
+  "homepage": "https://github.com/nielsnl68/node-red-contrib-i2c-devices#readme",
   "keywords": [
     "n_de-red",
     "raspberry",
@@ -18,20 +44,17 @@
     "pwm",
     "servo"
   ],
+  "license": "MIT",
+  "name": "node-red-contrib-i2c-devices",
+  "node-red": {
+    "nodes": {
+      "PCA9685": "src/PCA9685-node.js"
+    }
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/nielsnl68/node-red-contrib-i2c-devices"
+    "url": "git+https://github.com/nielsnl68/node-red-contrib-i2c-devices.git"
   },
-  "bugs": {
-    "url": "https://github.com/nielsnl68/node-red-contrib-i2c-devices/issues"
-  },
-  "scripts": {
-  },
-  "dependencies": {
-    "i2c-bus": "1.2.2",
-    "nanotimer": "^0.3.14"
-  },
-  "devDependencies": {
-   
-  }
+  "scripts": {},
+  "version": "0.0.7"
 }
