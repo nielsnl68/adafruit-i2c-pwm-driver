@@ -1,25 +1,4 @@
 {
-  "_from": "git+https://github.com/nielsnl68/node-red-contrib-i2c-devices.git",
-  "_id": "node-red-contrib-i2c-devices@0.0.6",
-  "_inBundle": false,
-  "_integrity": "sha1-DogmAcJ2IhyMM1dN6xa9QhOFvs8=",
-  "_location": "/node-red-contrib-i2c-devices",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "git",
-    "raw": "https://github.com/nielsnl68/node-red-contrib-i2c-devices.git",
-    "rawSpec": "https://github.com/nielsnl68/node-red-contrib-i2c-devices.git",
-    "saveSpec": "git+https://github.com/nielsnl68/node-red-contrib-i2c-devices.git",
-    "fetchSpec": "https://github.com/nielsnl68/node-red-contrib-i2c-devices.git",
-    "gitCommittish": "master"
-  },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "git+https://github.com/nielsnl68/node-red-contrib-i2c-devices.git#e4caa3e3759ce5c2505cd776d370f3ad8a39f615",
-  "_spec": "https://github.com/nielsnl68/node-red-contrib-i2c-devices.git",
-  "_where": "/home/pi/.node-red",
   "author": {
     "name": "niels v/d Spek"
   },
