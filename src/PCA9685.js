@@ -104,6 +104,7 @@ function makePwmDriver(port, address, debug) {
       .then(() => i2c.writeBytes(LED0_ON_H + 4 * channel, on >> 8))
       .then(() => i2c.writeBytes(LED0_OFF_L + 4 * channel, off & 0xFF))
       .then(() => i2c.writeBytes(LED0_OFF_H + 4 * channel, off >> 8))
+	  .catch(console.error);
   };
 
   var setAllPWM = function setAllPWM(on, off) {
@@ -115,10 +116,12 @@ function makePwmDriver(port, address, debug) {
       .then(() => i2c.writeBytes(ALL_LED_ON_H, on >> 8))
       .then(() => i2c.writeBytes(ALL_LED_OFF_L, off & 0xFF))
       .then(() => i2c.writeBytes(ALL_LED_OFF_H, off >> 8))
+	  .catch(console.error);
   };
 
   var stop = function stop() {
-    return i2c.writeBytes(ALL_LED_OFF_H, 0x01);
+    return i2c.writeBytes(ALL_LED_OFF_H, 0x01)
+	  .catch(console.error);
   };
 
 
