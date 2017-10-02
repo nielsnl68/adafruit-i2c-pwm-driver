@@ -17,7 +17,7 @@ module.exports = function (RED) {
 
   'use strict';
   // require any external libraries we may need....
-  // Node.js Imports
+  // Node.js Imports 
 
   // NPM Imports
   const PCA9685 = require("./PCA9685.js");

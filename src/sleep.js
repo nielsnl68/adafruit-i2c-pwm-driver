@@ -17,7 +17,7 @@ function sleep(seconds) {
   });
 }
 
-function usleep(micros) {
+function usleep(micros) { 
   return new Promise(function (resolve, reject) {
     var timer = new NanoTimer();
     timer.setTimeout(function (x) {
