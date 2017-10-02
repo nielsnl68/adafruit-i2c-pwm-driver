@@ -39,9 +39,9 @@ function makeI2CWrapper(port, address, debug) {
     if ((buf instanceof Array)) {
       buf = Buffer(buf);
     }
-    if (debug) {
-      console.log('cmd ' + cmd.toString(16) + ' values ' + buf.values());
-    }
+   // if (debug) {
+      console.log('adress '+address.toString(16) + ', cmd ' + cmd.toString(16) + ', values ' + JSON.stringify(buf.values()));
+  //  }
     return new Promise(function (resolve, reject) {
       try {
         i2c.writeI2cBlock(address, cmd, buf.length, buf, function (error, data) {
@@ -52,7 +52,7 @@ function makeI2CWrapper(port, address, debug) {
           resolve(data);
         });
       } catch (er) {
-        return reject(error);
+        return reject(err);
       }
     });
   };

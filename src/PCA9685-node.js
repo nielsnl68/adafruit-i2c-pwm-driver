@@ -73,7 +73,7 @@ module.exports = function (RED) {
          rule = {smooth:false, minout:0, maxout:4048};
       }          
 
-      var out = (n / 255 * (Number(rule.maxout) - Number(rule.minout))) + Number(rule.minout);
+      var out = ((n / 255) * (Number(rule.maxout) - Number(rule.minout))) + Number(rule.minout);
       out = Math.round(out); 
       node.log([channel, out, rule.maxout , rule.minout]);
       pwmDriver.setPWM(channel, 0, out)// channel, on , off
